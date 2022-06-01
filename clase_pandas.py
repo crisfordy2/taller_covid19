@@ -32,6 +32,23 @@ print("5.Lista personas recuperadas: ", lista_municipios)
 cantidad_muertes = data[data['Estado'] == 'Fallecido'].shape[0]
 print("6.Cantidad de personas que murieron por covid: ", cantidad_muertes)
 
+tipocaso_mayor_menor = data['Tipo de contagio'].sort_values(ascending=False)
+print("7.Mayor a menor por tipo de caso: ", tipocaso_mayor_menor)
+
+numero_departamento = data['Nombre departamento'].value_counts().count()
+print("8. Número de departamentos afectados: ", numero_departamento)
+
+lista_departamento = data['Nombre departamento'].unique().tolist()
+print("9. lista departamentos afectados: ", lista_departamento)
+
+tipo_atencion_mayor_menor = data['Ubicación del caso'].sort_values(ascending=False)
+print("10. Ordene de mayor a menor por tipo de atención: ", tipo_atencion_mayor_menor)
+
+departamentos_mayores_casos = data['Nombre municipio' ].value_counts().head(10)
+print("11. 10departamentos con mas casos de contagiados: ", departamentos_mayores_casos)
+
+
+
 # Normalizar columna sexo
 
 data.loc[data['Sexo'] == 'm'] = 'M'
@@ -67,7 +84,7 @@ data.loc[data['Sexo'] == 'F'] = 'Fallecido'
 
 # Liste por orden descendente las 10 ciudades con mas casos reportados
 
-data['Nombre municipio' ].value_counts().head(10)
+
 
 # Eliminar filas por condicion
 
