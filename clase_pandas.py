@@ -4,34 +4,6 @@ import matplotlib.pyplot as plt
 url = 'Casos_positivos_de_COVID-19_25_05_2022.csv'
 data = pd.read_csv(url)
 
-# Conocer las dimensiones del archivo
-data.shape
-
-# Conocer las columnas del arhivo
-data.columns
-
-# Cantidad de elementos del arhivo
-data.size
-
-# Para saber cuantos registros hay por columna
-
-data.count()
-
-# Acceder a los elementos de una columna
-data['Código ISO del país']
-
-# Eliminar columnas de un dataset
-
-data.drop('Código ISO del país', axis = 1, inplace=True)
-data.drop('Nombre del país', axis = 1, inplace=True)
-data.drop('Pertenencia étnica', axis = 1, inplace=True)
-data.drop('Nombre del grupo étnico', axis = 1, inplace=True)
-data.drop('Fecha de inicio de síntomas', axis = 1, inplace=True)
-data.drop('Unidad de medida de edad', axis = 1, inplace=True)
-data.drop('Código DIVIPOLA departamento', axis = 1, inplace=True)
-data.drop('Código DIVIPOLA municipio', axis = 1, inplace=True)
-data.drop('ID de caso', axis = 1, inplace=True)
-
 
 # Agrupar por columnas los resultados
 data['Estado'].value_counts()
@@ -41,9 +13,24 @@ data['Estado'].value_counts()
 data.loc[data['Estado'] == 'leve'] = 'Leve'
 data.loc[data['Estado'] == 'LEVE'] = 'Leve'
 
-# Cuantas personas murieron por covid en Colombia
+cantidad_casos = data.shape[0]
+print("1.Cantidad de contagios: ", cantidad_casos)
+
+#Nombre municipio
+numero_municipios = data['Nombre municipio'].value_counts().count()
+print("2.Cantidad de municipios afectados: ", cantidad_casos)
+
+lista_municipios = data['Nombre municipio' ].unique().tolist()
+print("3.Lista municipios afectados: ", lista_municipios)
+
+personas_casa = data[data['Ubicación del caso'] == 'Casa'].shape[0]
+print("4.Lista personas en casa: ", lista_municipios)
+
+personas_recuperadas = data[data['Recuperado'] == 'Recuperado'].shape[0]
+print("5.Lista personas recuperadas: ", lista_municipios)
+
 cantidad_muertes = data[data['Estado'] == 'Fallecido'].shape[0]
-print(cantidad_muertes)
+print("6.Cantidad de personas que murieron por covid: ", cantidad_muertes)
 
 # Normalizar columna sexo
 
@@ -65,7 +52,7 @@ cantidad_muertes_mj_BQ = aux.shape[0]
 
 # Tasa de mortalidad del covid en Colombia
 
-cantidad_casos = data.shape[0]
+
 tasa_mortalidad = cantidad_muertes / cantidad_casos * 100
 
 # Agrupar por Coluna Sexo, Estado
