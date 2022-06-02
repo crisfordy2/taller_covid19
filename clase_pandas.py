@@ -8,10 +8,30 @@ data = pd.read_csv(url)
 # Agrupar por columnas los resultados
 data['Estado'].value_counts()
 
+
+# ELIMINAMOS LAS COLUMNAS DEL DATASET 
+data.drop('Código ISO del país', axis = 1, inplace=True)
+data.drop('Nombre del país', axis = 1, inplace=True)
+data.drop('Pertenencia étnica', axis = 1, inplace=True)
+data.drop('Nombre del grupo étnico', axis = 1, inplace=True)
+data.drop('Fecha de inicio de síntomas', axis = 1, inplace=True)
+data.drop('Unidad de medida de edad', axis = 1, inplace=True)
+data.drop('Código DIVIPOLA departamento', axis = 1, inplace=True)
+data.drop('Código DIVIPOLA municipio', axis = 1, inplace=True)
+data.drop('ID de caso', axis = 1, inplace=True)
+
 # Normalizar la columna de Estado
 
 data.loc[data['Estado'] == 'leve'] = 'Leve'
 data.loc[data['Estado'] == 'LEVE'] = 'Leve'
+
+data.loc[data['Estado'] == 'M'] = 'Moderado'
+data.loc[data['Sexo'] == 'F'] = 'Fallecido'
+
+
+data.loc[data['Sexo'] == 'm'] = 'M'
+data.loc[data['Sexo'] == 'f'] = 'F'
+
 
 cantidad_casos = data.shape[0]
 print("1.Cantidad de contagios: ", cantidad_casos)
@@ -61,52 +81,25 @@ print("15. 10 municipios con mas casos de fallecidos: ", municipio_mayores_falle
 municipio_mayores_recuperado = data[data['Recuperado'] == 'Recuperado'].groupby('Nombre municipio').size().sort_values(ascending=False).head(10)
 print("16.  10 municipios con mas casos de recuperados: ", municipio_mayores_recuperado)
 
+municipio_departamento_mayores = data.groupby(['Nombre municipio', 'Nombre departamento']).size().sort_values(ascending=False)
+print("17. agrupado por departamento y en orden de Mayor ciudades: ", municipio_departamento_mayores )
 
+municipio_departamento_promedio = data[data['Sexo'] == 'M'].groupby('Nombre departamento').mean()
+print("18. promedio de edad de contagiados por hombre ciudades: ", municipio_departamento_promedio )
 
+fechas_contagios = data['Fecha de diagnóstico' ].value_counts().sort_values(ascending=False)
+print("21. fechas mayor menor donde se presentaron mas contagios: ", fechas_contagios )
 
-
-
-# Normalizar columna sexo
-
-data.loc[data['Sexo'] == 'm'] = 'M'
-data.loc[data['Sexo'] == 'f'] = 'F'
-
-# Cuantas mujeres fallecieron en Colombia
-aux = data.loc[(data['Estado'] == 'Fallecido') & (data['Sexo'] == 'F') ]
-aux = data.loc[(data['Estado'] == 'Fallecido') & (data['Sexo'] == 'F') ]
-cantidad_muertes_mujeres = aux.shape[0]
-
-# Cuantas personas fallecieron en Barranquilla
-aux = data.loc[(data['Estado'] == 'Fallecido') & (data['Nombre municipio'] == 'BARRANQUILLA') ]
-cantidad_muertes_BQ = aux.shape[0]
-
-# Cuantas mujeres fallecieron en Barranquilla
-aux = data.loc[(data['Estado'] == 'Fallecido') & (data['Sexo'] == 'F') & (data['Nombre municipio'] == 'BARRANQUILLA') ]
-cantidad_muertes_mj_BQ = aux.shape[0]
-
-
-# Tasa de mortalidad del covid en Colombia
-
-
+cantidad_muertes = data[data['Estado'] == 'Fallecido'].shape[0]
+cantidad_recuperados = data[data['Recuperado'] == 'Recuperado'].shape[0]
 tasa_mortalidad = cantidad_muertes / cantidad_casos * 100
+tasa_recuperacion = cantidad_recuperados / cantidad_casos * 100
+print("22. tasa mortalidad: ", tasa_mortalidad, )
+print ("23. tasa recuperaccion: ", tasa_recuperacion )
 
-# Agrupar por Coluna Sexo, Estado
-data.groupby(['Sexo', 'Estado']).size()
-data.groupby(['Estado', 'Sexo']).size()
+cantidad_atencion = data.groupby(['Nombre municipio', 'Ubicación del caso']).size()
+print('26. Cantidad de personas por atención:', cantidad_atencion)
 
-# Normalizar columna Estado
-
-data.loc[data['Estado'] == 'M'] = 'Moderado'
-data.loc[data['Sexo'] == 'F'] = 'Fallecido'
-
-
-# Liste por orden descendente las 10 ciudades con mas casos reportados
-
-
-
-# Eliminar filas por condicion
-
-# Curva de contagios en Barranquilila
 
 data[(data['Nombre municipio'] == 'BOGOTA') & (data['Estado'] == 'Fallecido')].groupby('Fecha de diagnóstico').size().plot()
 
